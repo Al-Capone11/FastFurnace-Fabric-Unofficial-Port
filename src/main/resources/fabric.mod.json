@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "fastfurnace",
+  "icon": "assets/fastfurnace/icon.png",
+  "name": "FastFurnace",
+  "version": "${version}",
+  "description": "Fabric port of FastFurnace for Minecraft 26.2",
+  "authors": [
+    "Shadows_of_Fire"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.shadowsoffire.fastfurnace.FastFurnace"
+    ]
+  },
+  "mixins": [
+    "fastfurnace.mixins.json"
+  ],
+  "depends": {
+    "fabric-api": "*",
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${minecraft_version}",
+    "java": ">=25"
+  }
+}

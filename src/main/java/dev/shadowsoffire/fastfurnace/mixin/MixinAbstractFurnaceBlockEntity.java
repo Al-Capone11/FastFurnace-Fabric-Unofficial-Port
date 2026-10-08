@@ -3,6 +3,7 @@ package dev.shadowsoffire.fastfurnace.mixin;
 import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -18,7 +19,6 @@ import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeManager.CachedCheck;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
@@ -39,8 +39,8 @@ public abstract class MixinAbstractFurnaceBlockEntity extends BaseContainerBlock
     @Unique
     protected ItemStack failedMatch = ItemStack.EMPTY;
 
-    @Shadow
-    protected RecipeType<? extends AbstractCookingRecipe> recipeType;
+    @Shadow @Final
+    private CachedCheck<SingleRecipeInput, ? extends AbstractCookingRecipe> quickCheck;
 
     @Nullable
     @SuppressWarnings("unchecked")
@@ -55,9 +55,7 @@ public abstract class MixinAbstractFurnaceBlockEntity extends BaseContainerBlock
             return this.curRecipe;
         }
         else {
-            RecipeHolder<AbstractCookingRecipe> rec = level.recipeAccess()
-                .getRecipeFor((RecipeType<AbstractCookingRecipe>) this.recipeType, recipeInput, level)
-                .orElse(null);
+            RecipeHolder<AbstractCookingRecipe> rec = (RecipeHolder<AbstractCookingRecipe>) this.quickCheck.getRecipeFor(recipeInput, level).orElse(null);
 
             if (rec == null) {
                 this.failedMatch = input.copy();
@@ -82,3 +80,8 @@ public abstract class MixinAbstractFurnaceBlockEntity extends BaseContainerBlock
     }
 
 }
+
+
+
+
+
